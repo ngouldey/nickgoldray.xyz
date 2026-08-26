@@ -1,0 +1,60 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Gallery from "../components/Gallery.astro";
+
+const photos = await getCollection("photos");
+const featured = photos.filter((p) => p.data.featured).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Nick Goldray — Photography">
+	<section class="hero container">
+		<p class="eyebrow">Photography</p>
+		<h1>Nick Goldray</h1>
+		<p class="intro">
+			I'm getting into photography and using this site to share what I shoot — landscapes, streets,
+			and whatever catches my eye. Replace this bio in <code>src/pages/index.astro</code> with your
+			own.
+		</p>
+		<a class="cta" href="/gallery/">View the gallery →</a>
+	</section>
+
+	<section class="container">
+		<h2 class="section-heading">Selected work</h2>
+		<Gallery photos={featured} />
+	</section>
+</BaseLayout>
+
+<style>
+	.hero {
+		padding-block: var(--space-5) var(--space-4);
+		max-width: 640px;
+	}
+
+	.intro code {
+		font-family: monospace;
+		font-size: 0.85em;
+	}
+
+	.cta {
+		display: inline-block;
+		margin-top: var(--space-2);
+		font-size: 0.95rem;
+		color: var(--accent);
+		border-bottom: 1px solid transparent;
+		transition: border-color 0.15s ease;
+	}
+
+	.cta:hover {
+		border-color: var(--accent);
+	}
+
+	.section-heading {
+		font-size: 1.1rem;
+		margin-bottom: var(--space-3);
+	}
+
+	section.container:last-of-type {
+		padding-bottom: var(--space-5);
+	}
+</style>

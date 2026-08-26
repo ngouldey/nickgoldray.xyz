@@ -1,0 +1,63 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+	photo: CollectionEntry<"photos">;
+}
+
+const { photo } = Astro.props;
+const { title, image, location } = photo.data;
+---
+
+<a class="card" href={`/photos/${photo.id}/`}>
+	<span class="frame">
+		<Image class="thumb" src={image} alt={title} width={900} transition:name={`photo-${photo.id}`} />
+	</span>
+	<span class="caption">
+		<span class="title">{title}</span>
+		{location && <span class="location">{location}</span>}
+	</span>
+</a>
+
+<style>
+	.card {
+		display: block;
+		color: inherit;
+	}
+
+	.frame {
+		display: block;
+		aspect-ratio: 4 / 3;
+		overflow: hidden;
+		background: var(--bg-elevated);
+	}
+
+	.thumb {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.4s ease;
+	}
+
+	.card:hover .thumb {
+		transform: scale(1.03);
+	}
+
+	.caption {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: var(--space-2);
+		padding-block: var(--space-1);
+	}
+
+	.title {
+		font-size: 0.95rem;
+	}
+
+	.location {
+		font-size: 0.8rem;
+		color: var(--text-muted);
+	}
+</style>
