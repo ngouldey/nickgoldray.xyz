@@ -95,8 +95,17 @@ const { photos } = Astro.props;
 					const dx = ev.clientX - startX;
 					const dy = ev.clientY - startY;
 					const w = panel.offsetWidth;
-					const newLeft = Math.min(Math.max(startLeft + dx, -(w - 80)), window.innerWidth - 80);
-					const newTop = Math.min(Math.max(startTop + dy, 10), window.innerHeight - 60);
+					const h = panel.offsetHeight;
+					// Keep the whole panel on screen, with room for the close button and
+					// resize handle (which sit slightly outside the panel's own edges) so
+					// they're never dragged out of reach.
+					const rightMargin = 20;
+					const topMargin = 20;
+					const bottomMargin = 16;
+					const maxLeft = Math.max(0, window.innerWidth - w - rightMargin);
+					const maxTop = Math.max(topMargin, window.innerHeight - h - bottomMargin);
+					const newLeft = Math.min(Math.max(startLeft + dx, 0), maxLeft);
+					const newTop = Math.min(Math.max(startTop + dy, topMargin), maxTop);
 					panel.style.left = `${newLeft}px`;
 					panel.style.top = `${newTop}px`;
 				};
@@ -121,7 +130,14 @@ const { photos } = Astro.props;
 
 				const onMove = (ev: PointerEvent) => {
 					const dx = ev.clientX - startX;
-					const newWidth = Math.min(Math.max(160, startWidth + dx), window.innerWidth * 0.9);
+					const margin = 20;
+					// Never let the panel grow past the visible window from its current
+					// position — otherwise the resize handle (and close button) can end up
+					// off screen with no way to grab them and shrink back down.
+					const maxWidthForRight = window.innerWidth - panel.offsetLeft - margin;
+					const maxWidthForBottom = (window.innerHeight - panel.offsetTop - margin) * ratio;
+					const maxWidth = Math.max(160, Math.min(maxWidthForRight, maxWidthForBottom));
+					const newWidth = Math.min(Math.max(160, startWidth + dx), maxWidth);
 					panel.style.width = `${newWidth}px`;
 					panel.style.height = `${newWidth / ratio}px`;
 				};
@@ -201,10 +217,12 @@ const { photos } = Astro.props;
 		width: 28px;
 		height: 28px;
 		border-radius: 50%;
-		background: #000000;
-		color: #ffffff;
-		border: 2px solid #ffffff;
+		background: #c0c0c0;
+		color: #000000;
+		border: 2px solid;
+		border-color: #eeeeee #6b6b6b #6b6b6b #eeeeee;
 		font-size: 16px;
+		font-weight: bold;
 		line-height: 1;
 		display: flex;
 		align-items: center;
@@ -219,8 +237,9 @@ const { photos } = Astro.props;
 		bottom: -6px;
 		width: 16px;
 		height: 16px;
-		background: #000000;
-		border: 2px solid #ffffff;
+		background: #c0c0c0;
+		border: 2px solid;
+		border-color: #eeeeee #6b6b6b #6b6b6b #eeeeee;
 		cursor: nwse-resize;
 		touch-action: none;
 	}
