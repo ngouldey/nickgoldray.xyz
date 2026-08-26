@@ -38,7 +38,6 @@ const { photos } = Astro.props;
 		}
 
 		function closePanel(panel: HTMLElement) {
-			panel.classList.remove("is-active");
 			panel.classList.add("is-closing");
 			const source = panelSources.get(panel);
 			source?.classList.remove("is-floating-source");
@@ -80,8 +79,6 @@ const { photos } = Astro.props;
 
 			panelSources.set(panel, trigger);
 			trigger.classList.add("is-floating-source");
-
-			requestAnimationFrame(() => panel.classList.add("is-active"));
 
 			closeBtn.addEventListener("click", (e) => {
 				e.stopPropagation();
@@ -189,19 +186,14 @@ const { photos } = Astro.props;
 		background: #ffffff;
 		border: 2px solid #000000;
 		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-		opacity: 0;
-		transform: scale(0.96);
+		opacity: 1;
+		transform: scale(1);
 		transition:
 			opacity 0.25s ease,
 			transform 0.25s ease,
 			box-shadow 0.2s ease;
 		touch-action: none;
 		cursor: grab;
-	}
-
-	.floating-photo.is-active {
-		opacity: 1;
-		transform: scale(1);
 	}
 
 	.floating-photo.is-closing {
