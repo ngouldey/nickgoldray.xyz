@@ -31,6 +31,7 @@ const { photos } = Astro.props;
 		(window as any).__floatingGalleryInit = true;
 
 		let zTop = 1000;
+		const panelSources = new Map<HTMLElement, HTMLElement>();
 
 		function bringToFront(panel: HTMLElement) {
 			panel.style.zIndex = String(++zTop);
@@ -39,10 +40,13 @@ const { photos } = Astro.props;
 		function closePanel(panel: HTMLElement) {
 			panel.classList.remove("is-active");
 			panel.classList.add("is-closing");
+			const source = panelSources.get(panel);
+			source?.classList.remove("is-floating-source");
+			panelSources.delete(panel);
 			panel.addEventListener("transitionend", () => panel.remove(), { once: true });
 		}
 
-		function createFloatingPhoto(sourceImg: HTMLImageElement, title: string) {
+		function createFloatingPhoto(sourceImg: HTMLImageElement, title: string, trigger: HTMLElement) {
 			const rect = sourceImg.getBoundingClientRect();
 			const ratio = (sourceImg.naturalWidth || rect.width) / (sourceImg.naturalHeight || rect.height);
 
@@ -68,9 +72,14 @@ const { photos } = Astro.props;
 			const handle = document.createElement("span");
 			handle.className = "floating-resize-handle";
 			handle.setAttribute("aria-hidden", "true");
+			handle.innerHTML =
+				'<svg viewBox="0 0 12 12" width="9" height="9"><path d="M2 2 L10 10 M10 10 L10 6 M10 10 L6 10" stroke="#000000" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg>';
 
 			panel.append(img, closeBtn, handle);
 			document.body.appendChild(panel);
+
+			panelSources.set(panel, trigger);
+			trigger.classList.add("is-floating-source");
 
 			requestAnimationFrame(() => panel.classList.add("is-active"));
 
@@ -157,7 +166,7 @@ const { photos } = Astro.props;
 			if (!trigger) return;
 			const img = trigger.querySelector("img");
 			if (!img) return;
-			createFloatingPhoto(img, img.alt);
+			createFloatingPhoto(img, img.alt, trigger);
 		});
 
 		document.addEventListener("keydown", (e) => {
@@ -171,6 +180,10 @@ const { photos } = Astro.props;
 </script>
 
 <style is:global>
+	.is-floating-source {
+		visibility: hidden;
+	}
+
 	.floating-photo {
 		position: fixed;
 		background: #ffffff;
@@ -242,5 +255,12 @@ const { photos } = Astro.props;
 		border-color: #eeeeee #6b6b6b #6b6b6b #eeeeee;
 		cursor: nwse-resize;
 		touch-action: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.floating-resize-handle svg {
+		pointer-events: none;
 	}
 </style>
