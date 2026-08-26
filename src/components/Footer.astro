@@ -1,49 +1,23 @@
 <footer class="site-footer">
-	<div class="container bar">
-		<p>&copy; {new Date().getFullYear()} Nick Goldray</p>
-		<ul>
-			<li><a href="mailto:pokerpoot@gmail.com">Email</a></li>
-			<!-- TODO: point this at your real Instagram (or swap/remove) -->
-			<li><a href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram</a></li>
-		</ul>
+	<div class="container">
+		<p class="name">Nick Goldray</p>
+		<p class="credit">&copy; {new Date().getFullYear()}</p>
 	</div>
 </footer>
 
 <style>
 	.site-footer {
-		border-top: 1px solid var(--border);
-		margin-top: var(--space-5);
+		text-align: center;
+		padding: var(--space-5) 0;
 	}
 
-	.bar {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: space-between;
-		gap: var(--space-2);
-		padding-block: var(--space-3);
+	.name {
+		font-size: 20px;
+		margin-bottom: 5px;
 	}
 
-	.bar p {
-		margin: 0;
-		font-size: 0.85rem;
-	}
-
-	ul {
-		display: flex;
-		gap: var(--space-3);
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-
-	a {
-		font-size: 0.85rem;
-		color: var(--text-muted);
-		transition: color 0.15s ease;
-	}
-
-	a:hover {
-		color: var(--text);
+	.credit {
+		font-size: 13px;
+		margin-bottom: 0;
 	}
 </style>

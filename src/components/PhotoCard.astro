@@ -7,57 +7,80 @@ interface Props {
 }
 
 const { photo } = Astro.props;
-const { title, image, location } = photo.data;
+const { title, image } = photo.data;
 ---
 
-<a class="card" href={`/photos/${photo.id}/`}>
-	<span class="frame">
-		<Image class="thumb" src={image} alt={title} width={900} transition:name={`photo-${photo.id}`} />
-	</span>
-	<span class="caption">
-		<span class="title">{title}</span>
-		{location && <span class="location">{location}</span>}
-	</span>
-</a>
+<div class="card">
+	<button type="button" class="frame" data-float-trigger aria-label={`Expand ${title}`}>
+		<Image class="thumb" src={image} alt={title} width={1200} transition:name={`photo-${photo.id}`} />
+	</button>
+	<a class="caption" href={`/photos/${photo.id}/`}>{title}</a>
+</div>
 
 <style>
 	.card {
-		display: block;
-		color: inherit;
+		display: inline-block;
+		width: 33.33%;
+		padding: 0 10px 80px;
+		text-align: center;
+		vertical-align: top;
 	}
 
 	.frame {
-		display: block;
-		aspect-ratio: 4 / 3;
-		overflow: hidden;
-		background: var(--bg-elevated);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		padding: 30px;
+		background: none;
+		border: none;
+		cursor: pointer;
 	}
 
 	.thumb {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		transition: transform 0.4s ease;
+		max-width: 100%;
+		max-height: 100%;
+		width: auto;
+		height: auto;
+		object-fit: contain;
+		transition:
+			transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+			filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	.card:hover .thumb {
-		transform: scale(1.03);
+	.frame:hover .thumb,
+	.frame:focus-visible .thumb {
+		transform: scale(1.06);
+		filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.18));
 	}
 
 	.caption {
-		display: flex;
-		justify-content: space-between;
-		align-items: baseline;
-		gap: var(--space-2);
-		padding-block: var(--space-1);
+		display: block;
+		font-size: 20px;
+		line-height: 30px;
+		padding: 0 20px;
 	}
 
-	.title {
-		font-size: 0.95rem;
+	.caption:hover {
+		text-decoration: underline;
+		text-underline-offset: 4px;
 	}
 
-	.location {
-		font-size: 0.8rem;
-		color: var(--text-muted);
+	@media screen and (max-width: 767px) {
+		.card {
+			width: 50%;
+			padding: 0 10px 50px;
+		}
+
+		.frame {
+			padding: 15px;
+		}
+
+		.caption {
+			font-size: 18px;
+			line-height: 26px;
+			padding: 0 8px;
+		}
 	}
 </style>

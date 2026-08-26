@@ -18,93 +18,74 @@ const { Content } = await render(photo);
 const formattedDate = date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 ---
 
-<BaseLayout title={`${title} — Nick Goldray`}>
-	<article class="container">
+<BaseLayout description={`${title} — photography by Nick Goldray.`}>
+	<article class="container detail">
 		<a class="back" href="/gallery/">← Back to gallery</a>
-		<Image class="full" src={image} alt={title} width={1600} transition:name={`photo-${photo.id}`} />
-		<div class="meta">
-			<h1>{title}</h1>
-			<dl>
-				<div>
-					<dt>Date</dt>
-					<dd>{formattedDate}</dd>
-				</div>
-				{
-					location && (
-						<div>
-							<dt>Location</dt>
-							<dd>{location}</dd>
-						</div>
-					)
-				}
-				{
-					tags.length > 0 && (
-						<div>
-							<dt>Tags</dt>
-							<dd>{tags.join(", ")}</dd>
-						</div>
-					)
-				}
-			</dl>
-			<div class="caption">
-				<Content />
-			</div>
+		<div class="image-wrap">
+			<Image class="full" src={image} alt={title} width={1800} transition:name={`photo-${photo.id}`} />
+		</div>
+		<h1>{title}</h1>
+		<p class="meta">
+			{formattedDate}
+			{location && ` · ${location}`}
+		</p>
+		{tags.length > 0 && <p class="tags">{tags.join(", ")}</p>}
+		<div class="caption">
+			<Content />
 		</div>
 	</article>
 </BaseLayout>
 
 <style>
-	article {
-		padding-block: var(--space-3) var(--space-5);
+	.detail {
+		text-align: center;
+		padding-bottom: var(--space-5);
 	}
 
 	.back {
 		display: inline-block;
-		margin-bottom: var(--space-3);
-		font-size: 0.85rem;
-		color: var(--text-muted);
+		margin-bottom: var(--space-4);
+		font-size: 15px;
 	}
 
 	.back:hover {
-		color: var(--text);
+		text-decoration: underline;
+		text-underline-offset: 4px;
+	}
+
+	.image-wrap {
+		margin-bottom: var(--space-3);
 	}
 
 	.full {
 		width: 100%;
+		max-width: 900px;
 		height: auto;
-		background: var(--bg-elevated);
+		margin: 0 auto;
+	}
+
+	h1 {
+		font-size: 32px;
+		margin-bottom: 5px;
 	}
 
 	.meta {
-		margin-top: var(--space-3);
-		max-width: 640px;
+		font-size: 15px;
+		margin-bottom: 0;
 	}
 
-	.meta h1 {
-		margin-bottom: var(--space-2);
+	.tags {
+		font-size: 13px;
+		margin: 5px 0 0;
 	}
 
-	dl {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-4);
-		margin: 0 0 var(--space-3);
-	}
-
-	dt {
-		font-size: 0.7rem;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: var(--text-muted);
-		margin-bottom: 0.15rem;
-	}
-
-	dd {
-		margin: 0;
-		font-size: 0.9rem;
+	.caption {
+		max-width: 600px;
+		margin: var(--space-3) auto 0;
+		font-size: 16px;
 	}
 
 	.caption :global(p) {
-		font-size: 0.95rem;
+		margin: 0;
 	}
 </style>

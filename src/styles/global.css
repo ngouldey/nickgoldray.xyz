@@ -1,20 +1,14 @@
 :root {
-	--bg: #0c0c0d;
-	--bg-elevated: #151517;
-	--text: #f2f1ee;
-	--text-muted: #9a9894;
-	--border: #2a2a2c;
-	--accent: #e0a458;
+	--bg: #ffffff;
+	--text: #000000;
+	--font: "PT Serif", Georgia, "Times New Roman", serif;
 
-	--font-display: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
-	--font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
-	--container: 1200px;
+	--container: 1240px;
 	--space-1: 0.5rem;
 	--space-2: 1rem;
-	--space-3: 1.5rem;
-	--space-4: 2.5rem;
-	--space-5: 4rem;
+	--space-3: 1.75rem;
+	--space-4: 3.5rem;
+	--space-5: 6.25rem;
 }
 
 *,
@@ -27,12 +21,14 @@ html,
 body {
 	margin: 0;
 	padding: 0;
+	height: 100%;
 }
 
 body {
 	background: var(--bg);
 	color: var(--text);
-	font-family: var(--font-body);
+	font-family: var(--font);
+	font-size: 16px;
 	line-height: 1.5;
 	-webkit-font-smoothing: antialiased;
 }
@@ -40,25 +36,25 @@ body {
 h1,
 h2,
 h3 {
-	font-family: var(--font-display);
+	font-family: var(--font);
 	font-weight: 400;
 	line-height: 1.15;
-	margin: 0 0 var(--space-2);
+	margin: 0;
 }
 
 p {
 	margin: 0 0 var(--space-2);
-	color: var(--text-muted);
 }
 
-a {
-	color: inherit;
+a,
+a:visited {
+	color: var(--text);
 	text-decoration: none;
 }
 
 a:focus-visible,
 button:focus-visible {
-	outline: 2px solid var(--accent);
+	outline: 2px solid var(--text);
 	outline-offset: 3px;
 }
 
@@ -70,14 +66,30 @@ img {
 .container {
 	max-width: var(--container);
 	margin-inline: auto;
-	padding-inline: var(--space-3);
+	padding-inline: 20px;
+	width: 100%;
 }
 
-.eyebrow {
-	font-size: 0.75rem;
-	letter-spacing: 0.15em;
-	text-transform: uppercase;
-	color: var(--text-muted);
+.button {
+	display: block;
+	width: 100%;
+	max-width: 275px;
+	height: 60px;
+	line-height: 60px;
+	margin: var(--space-4) auto 0;
+	background: var(--text);
+	color: var(--bg);
+	font-family: var(--font);
+	font-size: 15px;
+	text-align: center;
+	border-radius: 0;
+	transition: transform 0.2s linear, box-shadow 0.2s linear;
+}
+
+.button:hover,
+.button:focus-visible {
+	box-shadow: 0 15px 15px -10px rgba(0, 0, 0, 0.4);
+	transform: scale(1.02, 1.02);
 }
 
 .visually-hidden {
@@ -88,4 +100,11 @@ img {
 	overflow: hidden;
 	clip: rect(0, 0, 0, 0);
 	white-space: nowrap;
+}
+
+@media screen and (max-width: 767px) {
+	:root {
+		--space-4: 2.5rem;
+		--space-5: 3rem;
+	}
 }

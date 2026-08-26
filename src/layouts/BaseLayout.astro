@@ -5,11 +5,10 @@ import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 
 interface Props {
-	title: string;
 	description?: string;
 }
 
-const { title, description = "Photography by Nick Goldray." } = Astro.props;
+const { description = "Photography by Nick Goldray." } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,7 +19,10 @@ const { title, description = "Photography by Nick Goldray." } = Astro.props;
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+		<title>nickgoldray</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
 		<ClientRouter />
 	</head>
 	<body>

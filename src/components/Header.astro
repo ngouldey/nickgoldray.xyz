@@ -4,11 +4,12 @@ const { pathname } = Astro.url;
 const links = [
 	{ href: "/", label: "Home" },
 	{ href: "/gallery/", label: "Gallery" },
+	{ href: "mailto:pokerpoot@gmail.com", label: "Contact" },
 ];
 ---
 
 <header class="site-header">
-	<div class="container bar">
+	<div class="container">
 		<a class="wordmark" href="/">Nick Goldray</a>
 		<nav aria-label="Primary">
 			<ul>
@@ -28,43 +29,50 @@ const links = [
 
 <style>
 	.site-header {
-		position: sticky;
-		top: 0;
-		z-index: 10;
-		background: color-mix(in srgb, var(--bg) 88%, transparent);
-		backdrop-filter: blur(8px);
-		border-bottom: 1px solid var(--border);
-	}
-
-	.bar {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding-block: var(--space-2);
+		text-align: center;
+		margin-bottom: var(--space-5);
 	}
 
 	.wordmark {
-		font-family: var(--font-display);
-		font-size: 1.25rem;
-		letter-spacing: 0.02em;
+		display: block;
+		font-size: 50px;
+		margin: var(--space-5) auto var(--space-4);
+		max-width: 754px;
 	}
 
 	nav ul {
 		display: flex;
-		gap: var(--space-3);
+		justify-content: center;
+		flex-wrap: wrap;
 		list-style: none;
 		margin: 0;
 		padding: 0;
+		font-size: 25px;
 	}
 
 	nav a {
-		font-size: 0.9rem;
-		color: var(--text-muted);
-		transition: color 0.15s ease;
+		display: block;
+		padding: 2px 25px;
 	}
 
-	nav a:hover,
 	nav a[aria-current="page"] {
-		color: var(--text);
+		text-decoration: underline;
+		text-underline-offset: 6px;
+	}
+
+	@media screen and (max-width: 767px) {
+		.wordmark {
+			font-size: 34px;
+			margin: var(--space-4) auto var(--space-3);
+		}
+
+		nav ul {
+			font-size: 18px;
+			justify-content: space-evenly;
+		}
+
+		nav a {
+			padding: 2px 10px;
+		}
 	}
 </style>

@@ -9,23 +9,219 @@ interface Props {
 const { photos } = Astro.props;
 ---
 
-<ul class="grid">
-	{
-		photos.map((photo) => (
-			<li>
-				<PhotoCard photo={photo} />
-			</li>
-		))
-	}
-</ul>
+<div class="grid">
+	{photos.map((photo) => <PhotoCard photo={photo} />)}
+</div>
 
 <style>
 	.grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-		gap: var(--space-3);
-		list-style: none;
-		margin: 0;
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	@media screen and (max-width: 767px) {
+		.grid {
+			justify-content: flex-start;
+		}
+	}
+</style>
+
+<script>
+	if (!(window as any).__floatingGalleryInit) {
+		(window as any).__floatingGalleryInit = true;
+
+		let zTop = 1000;
+
+		function bringToFront(panel: HTMLElement) {
+			panel.style.zIndex = String(++zTop);
+		}
+
+		function closePanel(panel: HTMLElement) {
+			panel.classList.remove("is-active");
+			panel.classList.add("is-closing");
+			panel.addEventListener("transitionend", () => panel.remove(), { once: true });
+		}
+
+		function createFloatingPhoto(sourceImg: HTMLImageElement, title: string) {
+			const rect = sourceImg.getBoundingClientRect();
+			const ratio = (sourceImg.naturalWidth || rect.width) / (sourceImg.naturalHeight || rect.height);
+
+			const panel = document.createElement("div");
+			panel.className = "floating-photo";
+			panel.style.left = `${rect.left}px`;
+			panel.style.top = `${rect.top}px`;
+			panel.style.width = `${rect.width}px`;
+			panel.style.height = `${rect.height}px`;
+			bringToFront(panel);
+
+			const img = document.createElement("img");
+			img.src = sourceImg.currentSrc || sourceImg.src;
+			img.alt = title;
+			img.draggable = false;
+
+			const closeBtn = document.createElement("button");
+			closeBtn.type = "button";
+			closeBtn.className = "floating-close";
+			closeBtn.setAttribute("aria-label", "Close");
+			closeBtn.textContent = "×";
+
+			const handle = document.createElement("span");
+			handle.className = "floating-resize-handle";
+			handle.setAttribute("aria-hidden", "true");
+
+			panel.append(img, closeBtn, handle);
+			document.body.appendChild(panel);
+
+			requestAnimationFrame(() => panel.classList.add("is-active"));
+
+			closeBtn.addEventListener("click", (e) => {
+				e.stopPropagation();
+				closePanel(panel);
+			});
+
+			panel.addEventListener("pointerdown", (e) => {
+				const target = e.target as HTMLElement;
+				if (target === closeBtn || target === handle) return;
+				bringToFront(panel);
+
+				const startX = e.clientX;
+				const startY = e.clientY;
+				const startLeft = panel.offsetLeft;
+				const startTop = panel.offsetTop;
+				panel.setPointerCapture(e.pointerId);
+				panel.classList.add("is-dragging");
+
+				const onMove = (ev: PointerEvent) => {
+					const dx = ev.clientX - startX;
+					const dy = ev.clientY - startY;
+					const w = panel.offsetWidth;
+					const newLeft = Math.min(Math.max(startLeft + dx, -(w - 80)), window.innerWidth - 80);
+					const newTop = Math.min(Math.max(startTop + dy, 10), window.innerHeight - 60);
+					panel.style.left = `${newLeft}px`;
+					panel.style.top = `${newTop}px`;
+				};
+				const onUp = () => {
+					panel.releasePointerCapture(e.pointerId);
+					panel.classList.remove("is-dragging");
+					panel.removeEventListener("pointermove", onMove);
+					panel.removeEventListener("pointerup", onUp);
+				};
+				panel.addEventListener("pointermove", onMove);
+				panel.addEventListener("pointerup", onUp);
+			});
+
+			handle.addEventListener("pointerdown", (e) => {
+				e.stopPropagation();
+				bringToFront(panel);
+
+				const startX = e.clientX;
+				const startWidth = panel.offsetWidth;
+				handle.setPointerCapture(e.pointerId);
+				panel.classList.add("is-resizing");
+
+				const onMove = (ev: PointerEvent) => {
+					const dx = ev.clientX - startX;
+					const newWidth = Math.min(Math.max(160, startWidth + dx), window.innerWidth * 0.9);
+					panel.style.width = `${newWidth}px`;
+					panel.style.height = `${newWidth / ratio}px`;
+				};
+				const onUp = () => {
+					handle.releasePointerCapture(e.pointerId);
+					panel.classList.remove("is-resizing");
+					handle.removeEventListener("pointermove", onMove);
+					handle.removeEventListener("pointerup", onUp);
+				};
+				handle.addEventListener("pointermove", onMove);
+				handle.addEventListener("pointerup", onUp);
+			});
+		}
+
+		document.addEventListener("click", (e) => {
+			const trigger = (e.target as HTMLElement).closest<HTMLElement>("[data-float-trigger]");
+			if (!trigger) return;
+			const img = trigger.querySelector("img");
+			if (!img) return;
+			createFloatingPhoto(img, img.alt);
+		});
+
+		document.addEventListener("keydown", (e) => {
+			if (e.key !== "Escape") return;
+			const floaters = Array.from(document.querySelectorAll<HTMLElement>(".floating-photo"));
+			if (floaters.length === 0) return;
+			const top = floaters.reduce((a, b) => (parseInt(b.style.zIndex) > parseInt(a.style.zIndex) ? b : a));
+			closePanel(top);
+		});
+	}
+</script>
+
+<style is:global>
+	.floating-photo {
+		position: fixed;
+		background: #ffffff;
+		border: 2px solid #000000;
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+		opacity: 0;
+		transform: scale(0.96);
+		transition:
+			opacity 0.25s ease,
+			transform 0.25s ease,
+			box-shadow 0.2s ease;
+		touch-action: none;
+		cursor: grab;
+	}
+
+	.floating-photo.is-active {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	.floating-photo.is-closing {
+		opacity: 0;
+		transform: scale(0.96);
+	}
+
+	.floating-photo.is-dragging {
+		cursor: grabbing;
+		box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.5);
+	}
+
+	.floating-photo img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		pointer-events: none;
+		user-select: none;
+	}
+
+	.floating-close {
+		position: absolute;
+		top: -14px;
+		right: -14px;
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		background: #000000;
+		color: #ffffff;
+		border: 2px solid #ffffff;
+		font-size: 16px;
+		line-height: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
 		padding: 0;
+	}
+
+	.floating-resize-handle {
+		position: absolute;
+		right: -6px;
+		bottom: -6px;
+		width: 16px;
+		height: 16px;
+		background: #000000;
+		border: 2px solid #ffffff;
+		cursor: nwse-resize;
+		touch-action: none;
 	}
 </style>
