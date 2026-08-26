@@ -7,7 +7,7 @@ import Gallery from "../components/Gallery.astro";
 const photos = (await getCollection("photos")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const featured = photos.filter((p) => p.data.featured);
 const hero = featured[0] ?? photos[0];
-const gridPhotos = featured.filter((p) => p.id !== hero.id);
+const gridPhotos = photos.filter((p) => p.id !== hero.id);
 ---
 
 <BaseLayout>
@@ -17,7 +17,6 @@ const gridPhotos = featured.filter((p) => p.id !== hero.id);
 
 	<div class="container">
 		<Gallery photos={gridPhotos} />
-		<a class="button" href="/gallery/">View Gallery</a>
 	</div>
 </BaseLayout>
 

@@ -12,6 +12,4 @@
 	</defs>
 	<rect width="1067" height="1600" fill="url(#g)" />
 	<rect width="1067" height="1600" filter="url(#grain)" />
-	<text x="60" y="1480" font-family="Georgia, 'Times New Roman', serif" font-size="18" letter-spacing="6" fill="#ffffff" fill-opacity="0.75">PLACEHOLDER</text>
-	<text x="60" y="1522" font-family="Georgia, 'Times New Roman', serif" font-size="36" fill="#ffffff">Mountain Pass</text>
 </svg>

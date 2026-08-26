@@ -1,29 +1,27 @@
 ---
-const { pathname } = Astro.url;
-
-const links = [
-	{ href: "/", label: "Home" },
-	{ href: "/gallery/", label: "Gallery" },
-	{ href: "mailto:pokerpoot@gmail.com", label: "Contact" },
-];
+const email = "pokerpoot@gmail.com";
+// TODO: swap in the real Instagram handle
+const instagram = "https://instagram.com/";
 ---
 
 <header class="site-header">
 	<div class="container">
 		<a class="wordmark" href="/">Nick Goldray</a>
-		<nav aria-label="Primary">
-			<ul>
-				{
-					links.map((link) => (
-						<li>
-							<a href={link.href} aria-current={pathname === link.href ? "page" : undefined}>
-								{link.label}
-							</a>
-						</li>
-					))
-				}
-			</ul>
-		</nav>
+		<div class="icons">
+			<a href={instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
+				<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+					<rect x="3" y="3" width="18" height="18" rx="5" />
+					<circle cx="12" cy="12" r="4.5" />
+					<circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
+				</svg>
+			</a>
+			<a href={`mailto:${email}`} aria-label="Email">
+				<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+					<rect x="3" y="5" width="18" height="14" rx="2" />
+					<path d="M3.5 6.5L12 13L20.5 6.5" />
+				</svg>
+			</a>
+		</div>
 	</div>
 </header>
 
@@ -36,43 +34,31 @@ const links = [
 	.wordmark {
 		display: block;
 		font-size: 50px;
-		margin: var(--space-5) auto var(--space-4);
+		margin: var(--space-5) auto 10px;
 		max-width: 754px;
 	}
 
-	nav ul {
+	.icons {
 		display: flex;
 		justify-content: center;
-		flex-wrap: wrap;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		font-size: 25px;
+		gap: 16px;
 	}
 
-	nav a {
+	.icons a {
 		display: block;
-		padding: 2px 25px;
-	}
-
-	nav a[aria-current="page"] {
-		text-decoration: underline;
-		text-underline-offset: 6px;
+		color: var(--text);
+		line-height: 0;
 	}
 
 	@media screen and (max-width: 767px) {
 		.wordmark {
 			font-size: 34px;
-			margin: var(--space-4) auto var(--space-3);
+			margin: var(--space-4) auto 8px;
 		}
 
-		nav ul {
-			font-size: 18px;
-			justify-content: space-evenly;
-		}
-
-		nav a {
-			padding: 2px 10px;
+		.icons svg {
+			width: 19px;
+			height: 19px;
 		}
 	}
 </style>
