@@ -6,7 +6,7 @@ import Gallery from "../components/Gallery.astro";
 const photos = (await getCollection("photos")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<BaseLayout description="The full photo gallery.">
+<BaseLayout>
 	<div class="container">
 		<Gallery photos={photos} />
 	</div>

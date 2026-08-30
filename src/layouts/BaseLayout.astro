@@ -8,7 +8,7 @@ interface Props {
 	description?: string;
 }
 
-const { description = "Photography by Nick Gouldey." } = Astro.props;
+const { description } = Astro.props;
 ---
 
 <!doctype html>
@@ -18,7 +18,7 @@ const { description = "Photography by Nick Gouldey." } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="robots" content="noindex, nofollow" />
-		<meta name="description" content={description} />
+		{description && <meta name="description" content={description} />}
 		<meta name="generator" content={Astro.generator} />
 		<title>nickgouldey</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
